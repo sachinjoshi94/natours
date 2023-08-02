@@ -1,0 +1,28 @@
+doctype html
+html
+  head
+  block head
+    meta(charset="UTF-8")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    link(rel="stylesheet" type="text/css" href="/css/style.css")
+    link(rel="shortcut icon" type="image/png" href="/img/favicon.png")
+    link(rel="stylesheet", href="https://fonts.googleapis.com/css?family=Lato:300,300i,700")
+    title Natours | #{title}
+
+  body
+    // Header
+    include header
+
+    // Main dynamic content
+    block content
+      h1 Placeholder heading. will be replaced
+
+    // Footer
+    include footer
+    
+    // The scripts within templates will be placed here
+    block scripts
+    script(src="https://js.stripe.com/v3/")
+    script(src='/js/bundle.js' type="module")
+    
+    
