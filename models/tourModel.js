@@ -148,9 +148,7 @@ tourSchema.pre('save', async function (next) {
 }); */
 
 tourSchema.pre(/^find/, function (next) {
-  this.start = Date.now();
   this.find({ secretTour: { $ne: true } });
-  console.log(`The query took ${Date.now() - this.start} miliseconds`);
   next();
 });
 

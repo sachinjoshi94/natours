@@ -7,21 +7,29 @@ module.exports = class Email {
     this.to = user.email;
     this.firstName = user.name.split(' ')[0];
     this.url = url;
-    this.from = `Sachin Joshi <${process.env.EMAIL_FROM}>`;
+    this.from = `Sachin Joshi <${
+      process.env.NODE_ENV.trim() === 'production'
+        ? process.env.PROD_EMAIL_FROM
+        : process.env.EMAIL_FROM
+    }>`;
   }
 
   newTransport() {
-    if (process.env.NODE_ENV === 'production') {
-      // create transport with prod credentials
+    if (process.env.NODE_ENV.trim() === 'production') {
+      console.log('here');
+      return this.createTransport(
+        process.env.PROD_EMAIL_HOST,
+        process.env.PROD_EMAIL_PORT,
+        process.env.PROD_EMAIL_USERNAME,
+        process.env.PROD_EMAIL_PASSWORD
+      );
     }
-    return nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
-      auth: {
-        user: process.env.EMAIL_USERNAME,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    });
+    return this.createTransport(
+      process.env.EMAIL_HOST,
+      process.env.EMAIL_PORT,
+      process.env.EMAIL_USERNAME,
+      process.env.EMAIL_PASSWORD
+    );
   }
 
   async send(template, subject) {
@@ -50,5 +58,13 @@ module.exports = class Email {
       'passwordReset',
       'Your password reset token (valid only for 10 minutes)'
     );
+  }
+
+  createTransport(host, port, user, pass) {
+    return nodemailer.createTransport({
+      host,
+      port,
+      auth: { user, pass },
+    });
   }
 };

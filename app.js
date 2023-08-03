@@ -7,6 +7,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const tourRouter = require('./routes/tourRouter');
 const userRouter = require('./routes/userRouter');
@@ -80,6 +81,8 @@ app.use(
     ],
   })
 );
+
+app.use(compression());
 
 // Mounting routers on application
 app.use('/', viewRouter);

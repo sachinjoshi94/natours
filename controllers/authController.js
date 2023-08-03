@@ -205,7 +205,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
-  console.log(req.body);
   if (
     !req.body.oldPassword ||
     !req.body.newPassword ||

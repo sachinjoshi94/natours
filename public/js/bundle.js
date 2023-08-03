@@ -3953,12 +3953,10 @@ const bookTour = async (tourId)=>{
     try {
         const response = await fetch(`/api/v1/bookings/checkout-session/${tourId}`);
         const data = await response.json();
-        console.log(data);
         await stripe.redirectToCheckout({
             sessionId: data.session.id
         });
     } catch (e) {
-        console.log(e);
         (0, _alertMjs.showAlert)("error", e);
     }
 };
