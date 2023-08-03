@@ -4,9 +4,9 @@
   "description": "Learning node, express and mondoDB",
   "main": "app.js",
   "scripts": {
-    "test": "set NODE_ENV=development && node server.js",
+    "start": "node server.js",
+    "dev": "nodemon server.js",
     "start:prod": "set NODE_ENV=production & nodemon server.js",
-    "start": "nodemon server.js",
     "debug": "ndb server.js",
     "watch:js": "parcel watch ./public/js/index.mjs",
     "build:js": "parcel build ./public/js/index.mjs"
