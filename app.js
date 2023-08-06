@@ -29,6 +29,8 @@ app.use(express.json({ limit: '50kb' }));
 app.use(cookieParser());
 
 // MIDDLEWARES
+
+// Allow app access only from trusted scripts and URLs
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -40,13 +42,13 @@ app.use(
         frameSrc: ['*.stripe.com'],
         imgSrc: ["'self'", 'data:', 'blob:'],
         connectSrc: [
-          '*',
-          // 'localhost:8000',
-          // 'https://*.mapbox.com',
-          // 'https://*.tiles.mapbox.com',
-          // 'https://api.mapbox.com',
-          // 'https://events.mapbox.com',
-          // 'https://d2ad6b4ur7yvpq.cloudfront.net',
+          '127.0.0.1:8000',
+          'https://*.mapbox.com',
+          'https://*.tiles.mapbox.com',
+          'https://api.mapbox.com',
+          'https://events.mapbox.com',
+          'https://d2ad6b4ur7yvpq.cloudfront.net',
+          'localhost:8000',
         ],
       },
     },
@@ -57,6 +59,7 @@ if (process.env.NODE_ENV.trim() === 'development') {
   app.use(morgan('dev'));
 }
 
+// Throttling maximum requests from an IP
 const limiter = rateLimit({
   max: 100,
   windowMs: 60 * 60 * 1000,
@@ -82,6 +85,7 @@ app.use(
   })
 );
 
+// HTTP response compression
 app.use(compression());
 
 // Mounting routers on application
@@ -96,8 +100,7 @@ app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`));
 });
 
+// Regisering our global error handler
 app.use(globalErrorHandler);
-
-// Third party middleware
 
 module.exports = app;

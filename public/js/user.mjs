@@ -3,17 +3,17 @@ import { showAlert } from './alert.mjs';
 
 export const updateSettings = async (data, type) => {
   try {
-    debugger;
     const headers =
       type === 'password' ? { 'Content-Type': 'application/json' } : {};
     const url =
       type === 'password'
         ? '/api/v1/users/updatePassword'
         : '/api/v1/users/updateMe';
+    const reqBody = type === 'password' ? JSON.stringify(data) : data;
     const response = await fetch(url, {
       method: 'PATCH',
       headers,
-      body: JSON.stringify(data),
+      body: reqBody,
     });
     const result = await response.json();
     if (result.status === 'success') {
