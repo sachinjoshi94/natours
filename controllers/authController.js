@@ -21,7 +21,7 @@ const createAndSendToken = (user, statusCode, req, res) => {
     httpOnly: true,
   };
 
-  if (req.protocol === 'https') {
+  if (req.secure || req.get('X-Forwarded-Proto') === 'https') {
     cookieOptions.secure = true;
   }
 

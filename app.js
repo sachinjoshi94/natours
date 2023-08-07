@@ -20,6 +20,7 @@ const globalErrorHandler = require('./controllers/errorController');
 
 const app = express();
 
+app.set('trust proxy');
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
