@@ -11,7 +11,7 @@ const signToken = (id) => {
   });
 };
 
-const createAndSendToken = (user, statusCode, res) => {
+const createAndSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
 
   const cookieOptions = {
@@ -21,7 +21,7 @@ const createAndSendToken = (user, statusCode, res) => {
     httpOnly: true,
   };
 
-  if (process.env.NODE_ENV === 'production') {
+  if (req.protocol === 'https') {
     cookieOptions.secure = true;
   }
 
@@ -48,7 +48,7 @@ exports.signUp = catchAsync(async (req, res, next) => {
   });
   const url = `${req.protocol}://${req.get('host')}/me`;
   await new Email(newUser, url).sendWelcome();
-  createAndSendToken(newUser.toObject(), 200, res);
+  createAndSendToken(newUser.toObject(), 200, req, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -62,7 +62,7 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401));
   }
-  createAndSendToken(user.toObject(), 200, res);
+  createAndSendToken(user.toObject(), 200, req, res);
 });
 
 exports.logout = catchAsync(async (req, res, next) => {
@@ -201,7 +201,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   // update the passwordChangedAt property
   // log the user in, send JWT
-  createAndSendToken(user, 200, res);
+  createAndSendToken(user, 200, req, res);
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
@@ -227,5 +227,5 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   user.passwordConfirm = req.body.confirmPassword;
   await user.save();
 
-  createAndSendToken(user.toObject(), 200, res);
+  createAndSendToken(user.toObject(), 200, req, res);
 });
